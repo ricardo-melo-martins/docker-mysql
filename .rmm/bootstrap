@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# Copyright (c) 2022 ricardo-melo-martins
+
+set -o errtrace
+set -o functrace
+set -o errexit
+set -o nounset
+set -o pipefail
+
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+# Canonicalize by following every symlink of the given name recursively
+canonicalize() {
+    NAME="$1"
+    if [ -f "$NAME" ]
+    then
+        DIR=$(dirname -- "$NAME")
+        NAME=$(cd -P "$DIR" > /dev/null && pwd -P)/$(basename -- "$NAME")
+    fi
+    while [ -h "$NAME" ]; do
+        DIR=$(dirname -- "$NAME")
+        SYM=$(readlink "$NAME")
+        NAME=$(cd "$DIR" > /dev/null && cd "$(dirname -- "$SYM")" > /dev/null && pwd)/$(basename -- "$SYM")
+    done
+    echo "$NAME"
+}
+
+# If current path is a symlink, resolve to real path
+realname="$0"
+if [ -L "$realname" ] 
+then
+	realname=$(readlink -f "$0")
+fi
+
+CONSOLE=$(dirname -- "$(canonicalize "$realname")")
+APP=$(dirname "$CONSOLE")
+
+
+# PATH_BIN diretório de scripts armazenados, geralmente 
+# utilizo a pasta .rmm/ (preferível) ou ./bin dentro do projeto
+export readonly PATH_RMM="$( cd "$( dirname "$0" )" && pwd )"
+
+# PATH_ROOT diretório anterior geralmente scripts de outra linguagem
+export readonly PATH_ROOT="$(dirname "$PATH_RMM")"
+# export readonly PATH_ROOT=$PWD
+
+export readonly PATH_DOCKER="${PATH_RMM}/.docker"
+export readonly PATH_DOCKER_BIN="${PATH_DOCKER}/bin"
+export readonly PATH_DOCKER_CONFIG="${PATH_DOCKER}/config"
+export readonly PATH_DOCKER_SCRIPT="${PATH_DOCKER}/script"
+
+# PATH_BIN_COMMON diretório para scripts comuns de reuso
+export readonly PATH_BIN_COMMON="${PATH_RMM}/common"
+export readonly FILE_BIN_FUNCTIONS="${PATH_BIN_COMMON}/functions"
+export readonly FILE_BIN_CONSTANTS="${PATH_BIN_COMMON}/constants"
+
+# # importando funcoes comuns de bash script
+if [ ! -f "${FILE_BIN_CONSTANTS}" ]; then
+    echo "Configuração inválida"
+    echo "Arquivo ${FILE_BIN_CONSTANTS} não encontrado"
+    exit 0
+else
+    source "${FILE_BIN_CONSTANTS}" 
+    source "${FILE_BIN_FUNCTIONS}" 
+fi
+
+# https://gist.github.com/mihow/9c7f559807069a03e302605691f85572
+export readonly FILE_ENV="${PATH_DOCKER}/mysql/config/.env.dev"
+
+set -a
+source <(cat ${FILE_ENV} | sed -e '/^#/d;/^\s*$/d' -e "s/'/'\\\''/g" -e "s/=\(.*\)/='\1'/g")
+set +a

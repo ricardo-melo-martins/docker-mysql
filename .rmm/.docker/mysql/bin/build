@@ -1,0 +1,34 @@
+#/bin/bash
+# @author ricardo-melo-martins
+# @license MIT
+# @reference https://docs.docker.com/engine/reference/commandline/build/
+
+docker_build() {
+
+  message_info "Docker Build"
+  local PROJECT_NAME="$1"
+  PATH_PROJECT=${PATH_DOCKER}/$PROJECT_NAME
+
+    DOCKERFILE=${PATH_PROJECT}/Dockerfile
+
+    # importando funcoes comuns de bash script
+    if [ ! -f $DOCKERFILE ]; then
+        message_error "Configuração inválida"
+        message_error "Arquivo ${DOCKERFILE} não encontrado"
+        exit 0
+    else
+        docker build -f $DOCKERFILE \
+            -t rmm_mysql .
+             # --build-arg MYSQL_VERSION=8.0 \
+             
+    fi
+
+  message_success "Docker Build OK"
+  unset PROJECT_NAME
+}
+
+
+
+
+
+

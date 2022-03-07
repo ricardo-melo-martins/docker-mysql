@@ -1,0 +1,30 @@
+#!/bin/bash
+# @author ricardo-melo-martins
+# @license MIT
+
+set -euo pipefail
+
+source "$FILE_BIN_CONSTANTS"
+
+message(){
+    local message="$1"
+    local color="$2"
+
+    echo -e "${color}"
+    echo $message
+    echo -e "${NOCOLOR}"
+    unset message
+}
+
+
+message_error(){
+    message "ERROR: ${1}" ${RED}
+}
+
+message_info(){
+    message "INFO: ${1}" ${BLUE}
+}
+
+message_success(){
+    message "SUCCESS: ${1}" ${GREEN}
+}

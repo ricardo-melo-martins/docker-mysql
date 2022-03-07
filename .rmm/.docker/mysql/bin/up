@@ -1,0 +1,26 @@
+#/bin/bash
+# @author ricardo-melo-martins
+# @license MIT
+# @reference https://docs.docker.com/compose/reference/up/
+
+docker_up() {
+
+  message_info "Docker Up"
+  local PROJECT_NAME="$1"
+  PATH_PROJECT=${PATH_DOCKER}/$PROJECT_NAME
+
+    DOCKERCOMPOSE=${PATH_PROJECT}/docker-compose.yml
+
+    if [ ! -f $DOCKERCOMPOSE ]; then
+        message_error "Configuração inválida"
+        message_error "Arquivo ${DOCKERCOMPOSE} não encontrado"
+        exit 0
+    else
+        docker-compose -f ${DOCKERCOMPOSE} up -d 
+        docker ps
+                
+    fi
+
+  message_success "Docker Up OK"
+  unset PROJECT_NAME
+}

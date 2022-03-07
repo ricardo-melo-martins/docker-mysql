@@ -1,0 +1,76 @@
+#/bin/bash
+# Copyright (c) 2022 ricardo-melo-martins
+
+# Loading bootstrap
+# Carregando parametros iniciais, funções comuns e constantes, provavel que todos os scripts precise
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/bootstrap"
+
+
+#  echo "$( git_branch )"
+git_branch() {
+    git branch | sed -n -e 's/^\* \(.*\)/\1/p'
+}
+
+
+
+COMMAND=$1
+
+case $COMMAND in
+  ps)
+    
+    PATH_PROJECT=${PATH_DOCKER}/$2
+    COMMAND_FILE="${PATH_PROJECT}/bin/ps"
+
+    if [ ! -f $COMMAND_FILE ]; then
+        message_error "Configuração inválida"
+        message_error "Arquivo ${COMMAND_FILE} não encontrado"
+        exit 0
+    else
+      source $COMMAND_FILE
+      docker_ps $2
+    fi    
+    unset PATH_PROJECT
+    unset COMMAND_FILE
+    exit 0        
+    ;;
+
+  build)
+
+    PATH_PROJECT=${PATH_DOCKER}/$2
+    COMMAND_FILE="${PATH_PROJECT}/bin/build"
+
+    if [ ! -f $COMMAND_FILE ]; then
+        message_error "Configuração inválida"
+        message_error "Arquivo ${COMMAND_FILE} não encontrado"
+    else
+      source $COMMAND_FILE
+      docker_build $2
+    fi
+    unset PATH_PROJECT
+    unset COMMAND_FILE
+    exit 0
+    ;;
+
+  up)
+    
+    local PATH_PROJECT=${PATH_DOCKER}/$2
+    local COMMAND_FILE="${PATH_PROJECT}/bin/up"
+
+    if [ ! -f $COMMAND_FILE ]; then
+        message_error "Configuração inválida"
+        message_error "Arquivo ${COMMAND_FILE} não encontrado"
+    else
+      source $COMMAND_FILE
+      docker_up $2 
+    fi
+    unset PATH_PROJECT
+    unset COMMAND_FILE
+    exit 0
+    ;;
+
+  *)
+    message_error "comando não encontrado"
+    ;;
+esac
+
+
