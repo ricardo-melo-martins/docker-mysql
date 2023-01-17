@@ -20,19 +20,23 @@ Este repo utilizo para desenvolvimento, POCs e testes ou aprendizado de novas te
 Primeiro o clone
 
 ```
-$ git clone git@github.com:ricardo-melo-martins/rmm-docker-mysql.git
+$ git clone git@github.com:ricardo-melo-martins/docker-mysql.git
 ```
 
-acesse o diretório `rmm-docker-mysql` 
+acesse o diretório `docker-mysql` 
 
 ```
-$ cd rmm-docker-mysql
+$ cd docker-mysql
 ```
 
 Para gerar a imagem do Mysql, digite então:
 
+```bash
+$ ./.rmm/docker build mysql
 ```
-$ .rmm/docker build mysql
+`ou`
+```bash
+$ sh .rmm/docker build mysql
 ```
 
 Deverá ter um resultado como
