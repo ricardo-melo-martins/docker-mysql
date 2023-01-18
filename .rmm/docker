@@ -53,8 +53,8 @@ case $COMMAND in
 
   up)
     
-    local PATH_PROJECT=${PATH_DOCKER}/$2
-    local COMMAND_FILE="${PATH_PROJECT}/bin/up"
+    PATH_PROJECT=${PATH_DOCKER}/$2
+    COMMAND_FILE="${PATH_PROJECT}/bin/up"
 
     if [ ! -f $COMMAND_FILE ]; then
         message_error "Configuração inválida"

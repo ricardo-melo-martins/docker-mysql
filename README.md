@@ -95,6 +95,19 @@ Visão geral EER Documentada pelo Workbench
 
 ![Imagem](/docs/images/wb-sakila-eer.png 'Esquema do Banco de dados Sakila')
 
+
+# Problemas Possíveis
+
+## Erro: MySQL 8: Public Key Retrieval is not allowed
+Pode acontecer de falhar na conexão usando um aplicativo ou linguagem, percebi que alterando dois parâmetros.
+- useSSL=false
+- allowPublicKeyRetrieval=true
+
+Um exemplo para o uso com java:
+```
+url="jdbc:mysql://localhost:3306?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true"
+```
+
 ## Licença
 
 É gratuito sob licença MIT e para mais informações veja [aqui](LICENSE).
