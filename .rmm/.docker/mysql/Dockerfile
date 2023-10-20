@@ -11,8 +11,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ARG PATH_SCRIPTS=/.rmm/.docker/mysql/script
 
-COPY ${PATH_SCRIPTS}/sakila/sakila-schema.sql /docker-entrypoint-initdb.d/01_sakila-schema.sql
-COPY ${PATH_SCRIPTS}/sakila/sakila-data.sql /docker-entrypoint-initdb.d/02_sakila-data.sql
+COPY ${PATH_SCRIPTS}/sakila/1.4/sakila-schema.sql /docker-entrypoint-initdb.d/01_sakila-schema.sql
+COPY ${PATH_SCRIPTS}/sakila/1.4/sakila-data.sql /docker-entrypoint-initdb.d/02_sakila-data.sql
 
 #####################################
 # Set Timezone
